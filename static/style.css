@@ -1,0 +1,82 @@
+body{
+    margin: 0;
+    padding: 0;;
+}
+main{
+    display: grid;
+    grid-template-columns: 25vw 75vw;
+}
+main #chat_column{
+    border-width: .5px;
+    border-style: solid;
+    border-color: rgba(209, 209, 209, 0.674);
+}
+main #chat_column div{
+    width: 100%;
+    height: 4em;
+    background-color: rgb(255, 255, 255);
+    text-align: center;
+    cursor: pointer;
+
+
+    border-style: solid;
+    border-width: .5px;
+    border-color: rgba(0, 0, 0, 0.123);
+
+}
+main #chat_column .search{
+    width: 100%;
+    border-color: rgba(0, 0, 0, 0.04);
+    padding: 7px;
+}
+main #chat_column div:hover{
+    background-color: lightgray;
+    transition: 120ms;
+}
+
+main #content-wrapper{
+    height: 100%;
+    width: 100%;
+    background-color: beige;
+}
+main #content-wrapper #content{
+    width: inherit;
+    height: inherit;
+}
+main #content-wrapper #content div{
+    margin: auto;
+    padding: 1px 30px 10px;
+    max-width: 500px;
+    width: fit-content;
+    border-radius: 5px;
+    margin: 5px auto;
+    margin-right: 5px;
+    background-color: lightgreen;
+}
+main #content-wrapper #content .foreign{
+    background-color: lightgray;
+    margin: 5px 5px;
+}
+main #content-wrapper #content div p{
+    padding: 6px;
+    max-width: 500px;
+    width: fit-content;
+    height: fit-content;
+    text-align: center;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+}
+main #content-wrapper #content div span{
+    font-size: .75rem;
+    margin: 0;
+    padding: 0;
+}
+
+main #content-wrapper .input_wrapper {
+    display: flex;
+    width: 100%;
+}
+main #content-wrapper .input_wrapper .input{
+    width: 100%;
+}
