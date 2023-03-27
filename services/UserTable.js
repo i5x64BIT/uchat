@@ -1,5 +1,4 @@
 import { UserModel } from '../models/UserModel.js';
-import { asyncUserHandler } from "./AsyncHandler.js";
 import sqlite3 from "sqlite3";
 import { open } from 'sqlite';
 
@@ -21,7 +20,7 @@ export async function queryUserCreate(user) {
             .then(() => console.log(`User ${newUser.email} created!`));
         await db.close();
     } catch (e) {
-        asyncUserHandler(e);
+        userHandler(e);
     }
 }
 export async function queryUserUpdate(id, email, password) {
@@ -58,7 +57,7 @@ export async function queryUserUpdate(id, email, password) {
             await db.close();
         }
     } catch (e){
-        asyncUserHandler(e);
+        userHandler(e);
     }
 }
 export async function queryUserDelete(id) {
@@ -76,26 +75,22 @@ export async function queryGetUserByID(id){
         await db.close();
         return new Promise( resolve => resolve(user));
     } catch (e){
-        asyncUserHandler(e);
+        userHandler(e);
     }
 }
 export async function queryGetUserIDByEmail(email){
-    try {
-        const db = await connectDB();
-        const selectQuery = `SELECT id FROM users WHERE email=?`;
-        const res = await db.get(selectQuery, [email]);
-        await db.close();
-        return new Promise( (resolve,reject) => {
-            if(res){
-                resolve(res.id);
-            }
-            else{
-                reject(new Error('user not found'))
-            }
-        });
-    } catch (e){
-        asyncUserHandler(e);
-    }
+    const db = await connectDB();
+    const selectQuery = `SELECT id FROM users WHERE email=?`;
+    const res = await db.get(selectQuery, [email]);
+    await db.close();
+    return new Promise( (resolve,reject) => {
+        if(res){
+            resolve(res.id);
+        }
+        else{
+            reject(new Error('UserNotFoundException'))
+        }
+    });
 }
 export async function queryGetUserByLogin(email, password){
     //fetch api and resolve a user obj
@@ -108,7 +103,6 @@ export async function queryGetUserByLogin(email, password){
             (userArr[0]) ? resolve(userArr[0]) : reject(new Error('Username or password are incorrect'));
         });
     } catch (e) {
-        asyncUserHandler(e);
     }
 }
 

@@ -1,5 +1,5 @@
 import {WebSocketServer} from "ws";
-import {MessegeModel} from "../models/MessegeModel.js";
+import {MessageModel} from "../models/MessageModel.js";
 import Chat from "./Chat.js";
 export class WebSocketController {
 
@@ -13,7 +13,7 @@ export class WebSocketController {
             ws.on('message', function message(data) {
                 //console.log(`Received message ${data} from user ${client}`);
                 data = JSON.parse(data);
-                const message = new MessegeModel({
+                const message = new MessageModel({
                     senderID: request.session.user.id,
                     receiverID: data.receiver_id,
                     content:data.content
@@ -29,6 +29,7 @@ export class WebSocketController {
                             wsReceiver.send(JSON.stringify(message));
                         }
                     })
+                    .catch(e => console.log(e))
             });
         });
 

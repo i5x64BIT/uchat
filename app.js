@@ -5,9 +5,9 @@ import path from "path";
 import {fileURLToPath} from "url";
 
 import fs from 'fs';
-import initDB from "./services/InitDB.js";
-import {ChatRouter} from "./routes/Chat.js";
-import { UserRouter } from "./routes/User.js";
+import init from "./database/init.js";
+import {ChatRouter} from "./routes/ChatRouter.js";
+import { UserRouter } from "./routes/UserRouter.js";
 
 import bodyParser from "body-parser";
 import {WebSocketController} from "./controller/WebSocketsController.js";
@@ -15,6 +15,7 @@ import {WebSocketController} from "./controller/WebSocketsController.js";
 import RedisStore from "connect-redis"
 import session from "express-session"
 import {createClient} from "redis"
+import ErrorHandler from "./middleware/ErrorHandler.js";
 
 // Initialize client.
 let redisClient = createClient()
@@ -42,12 +43,13 @@ const __dirname = setDirname() //Utils
 app.use(express.static(path.join(__dirname, '/static')));
 app.use(bodyParser.urlencoded( {extended: true} ));
 // Initialize session store.
-app.use(sessionParser);
+app.use(sessionParser)
 app.use(UserRouter);
 app.use(ChatRouter);
+app.use(ErrorHandler);
 
 //The listen function in express v4 returns a server object
-const server = app.listen(80,(e) => {
+const server = app.listen(80,() => {
     console.log('port 80 is open');
 });
 
@@ -71,14 +73,14 @@ function createDB() {
                     }
                 })
             });
-            await initDB();
+            await init();
         })();
     }
 
 }
-function setDirname() {
+export function setDirname() {
     const __filename = fileURLToPath(import.meta.url);
     const routesdir= path.dirname(__filename);
     return routesdir.replace(__filename, '')
 }
-
+export let appDir = setDirname();
