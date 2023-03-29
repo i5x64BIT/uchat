@@ -12,22 +12,34 @@ import {UserException} from "../lib/errors/UserException.js";
 
 export async function createUser(email, password){
     try{
+        if(!email || !password){
+            throw new UserException('Missing input',
+                UserException.CODES.INPUT_ERR);
+        }
         const user = new UserModel({email: email, password: password});
         await queryUserCreate(user);
-    } catch {
-        throw new UserException(
+    } catch (e) {
+        console.log(e.message);
+        if(e.stack.includes('UNIQUE constraint failed:')){ //checks if the unique attribute is responsible for sql error
+            throw new UserException(
+                'This email is already used',
+                UserException.CODES.EMAIL_IN_USE
+            )
+        }
+        else throw new UserException(
             "Couldn't create a user",
-            UserException.CODES.CREATE_USER
-        )
+            UserException.CODES.CREATE_USER,
+            e);
     }
 }
 export async function deleteUser(id){
     try{
         await queryUserDelete(id);
-    } catch {
+    } catch(e) {
         throw new UserException(
             "Couldn't delete user",
-            UserException.CODES.DELETE_ERR
+            UserException.CODES.DELETE_ERR,
+            e
         )
     }
     await Chat.removeChats(id); // has it's own try catch block in Chat controller.
@@ -35,10 +47,11 @@ export async function deleteUser(id){
 export async function updateUser(id, email, password){
     try{
         await queryUserUpdate(id, email, password);
-    } catch {
+    } catch(e) {
         throw new UserException(
             "Couldn't update user",
-            UserException.CODES.UPDATE_ERR
+            UserException.CODES.UPDATE_ERR,
+            e
         )
     }
 }

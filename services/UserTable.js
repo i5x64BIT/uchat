@@ -1,6 +1,7 @@
 import { UserModel } from '../models/UserModel.js';
 import sqlite3 from "sqlite3";
 import { open } from 'sqlite';
+import {UserException} from "../lib/errors/UserException.js";
 
 //open wrapper
 function connectDB(){
@@ -20,12 +21,11 @@ export async function queryUserCreate(user) {
             .then(() => console.log(`User ${newUser.email} created!`));
         await db.close();
     } catch (e) {
-        userHandler(e);
+        throw e;
     }
 }
 export async function queryUserUpdate(id, email, password) {
     try{
-        console.log('UserTable: queryUserUpdate is running')
         let query = '';
 
         if(email && password){
@@ -57,7 +57,11 @@ export async function queryUserUpdate(id, email, password) {
             await db.close();
         }
     } catch (e){
-        userHandler(e);
+        throw new UserException(
+            '',
+            UserException.CODES.SQL_ERR,
+            e
+        )
     }
 }
 export async function queryUserDelete(id) {
@@ -75,7 +79,11 @@ export async function queryGetUserByID(id){
         await db.close();
         return new Promise( resolve => resolve(user));
     } catch (e){
-        userHandler(e);
+        throw new UserException(
+            '',
+            UserException.CODES.SQL_ERR,
+            e
+        )
     }
 }
 export async function queryGetUserIDByEmail(email){
@@ -88,7 +96,10 @@ export async function queryGetUserIDByEmail(email){
             resolve(res.id);
         }
         else{
-            reject(new Error('UserNotFoundException'))
+            reject(new UserException(
+                'User not found',
+                UserException.CODES.MISSING_USER_ID
+            ))
         }
     });
 }
@@ -103,6 +114,11 @@ export async function queryGetUserByLogin(email, password){
             (userArr[0]) ? resolve(userArr[0]) : reject(new Error('Username or password are incorrect'));
         });
     } catch (e) {
+        throw new UserException(
+            '',
+            UserException.CODES.SQL_ERR,
+            e
+        )
     }
 }
 
