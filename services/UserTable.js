@@ -18,7 +18,7 @@ export async function queryUserCreate(user) {
         const insertQuery =
             'INSERT INTO users (email, password) VALUES (?,?)';
         await db.run(insertQuery, [user.email, user.password])
-            .then(() => console.log(`User ${newUser.email} created!`));
+            .then(() => console.log(`User ${user.email} created!`));
         await db.close();
     } catch (e) {
         throw e;

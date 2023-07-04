@@ -58,11 +58,11 @@ WebSocketController.init(server, sessionParser);
 //Utils
 function createDB() {
     if(!(fs.existsSync('./tmp') && fs.existsSync('./tmp/database.db'))){
-        (async () =>{
-            await fs.mkdir('./tmp', () =>{
+        ( () =>{
+            fs.mkdir('./tmp', () =>{
                 console.log("tmp directory was created!")
             });
-            await new Promise((resolve, reject) =>{
+            new Promise((resolve, reject) =>{
                 fs.writeFile('./tmp/database.db','', (err) => {
                     if (err) {
                         reject(err);
@@ -73,7 +73,7 @@ function createDB() {
                     }
                 })
             });
-            await init();
+            init();
         })();
     }
 
