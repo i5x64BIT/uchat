@@ -6,3 +6,4 @@ A chatting app in nodejs
 2. Set env variable DEBUG_MODE=1 to see full errors
 3. Launch the app via app.js
 4. Connect to localhost on port 80
+5. No custom url yet, USE localhost:80 !!
